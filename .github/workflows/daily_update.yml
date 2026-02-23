@@ -2,25 +2,25 @@ name: Daily Repository Update
 
 on:
   schedule:
-    # Runs exactly once a day at 00:00 UTC
-    - cron: '0 0 * * *'
-  workflow_dispatch: # Allows you to trigger it manually for testing
+    # Runs at exactly 09:30 UTC daily (satisfies specific hours/minutes rule)
+    - cron: '30 9 * * *'
+  workflow_dispatch: # Allows manual trigger to fix the "No runs found" error
 
 jobs:
   automated-commit:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Required to push the commit back to the repo
+      contents: write # Essential for the action to have permission to push code
     
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Update Activity Log for 24f1002537@ds.study.iitm.ac.in
+      - name: Update Activity for 24f1002537@ds.study.iitm.ac.in
         run: |
-          date >> activity_log.txt
+          echo "Last Update: $(date)" > daily_status.txt
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add activity_log.txt
-          git commit -m "Automated daily update: $(date)"
+          git add daily_status.txt
+          git commit -m "DevSync Daily Automated Update $(date)"
           git push
